@@ -1,1 +1,51 @@
+name: ETL BORME (diario)
 
+on:
+  schedule:
+    # 05:20 UTC diario (ajusta si quieres)
+    - cron: "20 5 * * *"
+  workflow_dispatch:
+    inputs:
+      run_date:
+        description: "Fecha AAAAMMDD (vacío = hoy UTC)"
+        required: false
+        default: ""
+
+jobs:
+  borme:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install system deps (ODBC for SQL Server)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y curl gnupg apt-transport-https unixodbc unixodbc-dev
+          curl https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
+          curl https://packages.microsoft.com/config/ubuntu/22.04/prod.list | sudo tee /etc/apt/sources.list.d/mssql-release.list
+          sudo apt-get update
+          sudo ACCEPT_EULA=Y apt-get install -y msodbcsql18
+
+      - name: Install python deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests pypdf2 pyodbc
+
+      - name: Run ETL (BORME)
+        env:
+          AZURE_SQL_SERVER: ${{ secrets.AZURE_SQL_SERVER }}
+          AZURE_SQL_DB: ${{ secrets.AZURE_SQL_DB }}
+          AZURE_SQL_USER: ${{ secrets.AZURE_SQL_USER }}
+          AZURE_SQL_PASSWORD: ${{ secrets.AZURE_SQL_PASSWORD }}
+          AZURE_SQL_SCHEMA: ${{ secrets.AZURE_SQL_SCHEMA }}
+          RUN_DATE: ${{ github.event.inputs.run_date }}
+        run: |
+          python scripts/arraigo_etl.py borme --date "$RUN_DATE" --cap 50
