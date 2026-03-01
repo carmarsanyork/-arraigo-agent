@@ -49,9 +49,9 @@ KEYWORDS_NEG = [
 # ⚠️ URLs base (hasta que tengas links exactos de listados)
 # Si luego me das las URLs de listados reales, lo hacemos más preciso.
 REGIONAL_SOURCES = [
-    {"source": "RelevoAragon",    "ccaa": "Aragón",          "list_url": "https://relevoaragon.com/"},
-    {"source": "RELEVACyL",       "ccaa": "Castilla y León", "list_url": "https://empresas.jcyl.es/web/es/economia-social-autonomos/novedad-programa-relevacyl.html"},
-    {"source": "RelevoCantabria", "ccaa": "Cantabria",       "list_url": "https://relevocantabria.com/"},
+    {"source": "RelevoAragon",    "ccaa": "Aragón",          "list_url": "https://relevoaragon.es/oportunidades/"},
+    {"source": "BolsaNavarra",    "ccaa": "Navarra",         "list_url": "https://www.navarraemprende.com/servicios/bolsa-de-negocios/?todas=1"},
+    {"source": "RelevoCantabria", "ccaa": "Cantabria",       "list_url": "https://relevocantabria.com/oferta-de-empresas/"},
 ]
 
 # -----------------------------
